@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity 0.8.17;
 
 contract MultiSigWallet {
-    event Deposit(address indexed sender, uint256 amount);
+    event Deposit(address indexed sender, uint256 indexed amount);
     event SubmitTransaction(uint256 indexed txId);
     event ApproveTransaction(address indexed owner, uint256 indexed txId);
     event RevokeTransaction(address indexed owner, uint256 indexed txId);
@@ -46,7 +46,9 @@ contract MultiSigWallet {
     }
 
     /// @notice Inizialize the contract with owners and number of approvals required for a transaction to be approved
-    constructor(address[] memory _owners, uint256 _numApprovalsRequired) {
+    constructor(address[] memory _owners, uint256 _numApprovalsRequired)
+        payable
+    {
         require(_owners.length > 0, "Owners required");
         require(
             _numApprovalsRequired > 0 &&
@@ -54,7 +56,7 @@ contract MultiSigWallet {
             "Invalid required number of owners"
         );
 
-        for (uint256 i; i < _owners.length; i++) {
+        for (uint256 i; i < _owners.length; ++i) {
             address owner = _owners[i];
             require(owner != address(0), "invalid owner");
             require(!isOwner[owner], "owner is not unique");
@@ -104,7 +106,8 @@ contract MultiSigWallet {
         view
         returns (uint256 count)
     {
-        for (uint256 i; i < owners.length; i++) {
+        uint256 ownersLength = owners.length;
+        for (uint256 i; i < ownersLength; ++i) {
             if (isApproved[_txId][owners[i]]) {
                 ++count;
             }
