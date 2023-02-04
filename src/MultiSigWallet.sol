@@ -25,6 +25,8 @@ contract MultiSigWallet {
     // mapping from tx index => owner => bool
     mapping(uint256 => mapping(address => bool)) public isApproved;
 
+    // MODIFIERS
+
     modifier onlyOwner() {
         require(isOwner[msg.sender], "not owner");
         _;
