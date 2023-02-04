@@ -75,7 +75,7 @@ contract MultiSigWallet {
 
     /// @notice Used to submit a transaction for approval by owners
     /// @param _to Address of the receiver
-    /// @param _value Amount of ether to send
+    /// @param _value Amount of ether to send to the receiver
     /// @param _data Any additional data needed to be sent
     function submitTransaction(
         address _to,

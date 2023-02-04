@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "../src/MultiSigWallet.sol";
+import {MultiSigWallet} from "../src/MultiSigWallet.sol";
 
 contract MultiSigWalletTest is Test {
     MultiSigWallet public multisigwallet;
@@ -23,10 +23,19 @@ contract MultiSigWalletTest is Test {
         vm.deal(eve, 10 ether);
     }
 
+    // Does constructor work properly
+    function testConstructor() public {
+        assertEq(multisigwallet.owners(0), alice);
+        assertEq(multisigwallet.owners(1), bob);
+        assertEq(multisigwallet.owners(2), eve);
+        assertEq(multisigwallet.numApprovalsRequired(), 2);
+    }
+
     // transfer 1 ether via receive() and emit Deposit()
-    function testReceive() public {
+    function testReceive(uint256 _amount) public {
         vm.prank(alice);
-        payable(multisigwallet).transfer(1 ether);
-        assertEq(address(multisigwallet).balance, 1 ether);
+        vm.assume(_amount <= 10 ether);
+        payable(multisigwallet).transfer(_amount);
+        assertEq(address(multisigwallet).balance, _amount);
     }
 }
