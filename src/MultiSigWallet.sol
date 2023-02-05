@@ -84,6 +84,7 @@ contract MultiSigWallet {
         uint256 _value,
         bytes calldata _data
     ) external onlyOwner {
+        require(_to != address(0), "invalid input: zero addr");
         transactions.push(
             Transaction({to: _to, value: _value, data: _data, executed: false})
         );
